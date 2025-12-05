@@ -22,7 +22,7 @@ def store_sun_data(db_name="nba_project.db", batch_size=25):
     conn = sqlite3.connect(db_name)
     cur = conn.cursor()
 
-    # Create table if it doesn't exist
+
     cur.execute("""
         CREATE TABLE IF NOT EXISTS daylight_info (
             arena_id INTEGER PRIMARY KEY,
@@ -33,7 +33,6 @@ def store_sun_data(db_name="nba_project.db", batch_size=25):
     conn.commit()
 
     while True:
-        # Pull a batch of arenas that haven't been processed yet
         cur.execute(f"""
             SELECT id, latitude, longitude
             FROM arenas
@@ -53,7 +52,7 @@ def store_sun_data(db_name="nba_project.db", batch_size=25):
                     VALUES (?, ?, ?)
                 """, (arena_id, sunrise, sunset))
                 print(f"Stored data for arena_id {arena_id}")
-                time.sleep(0.5)  # polite delay to avoid hammering the API
+                time.sleep(0.5)  
             except Exception as e:
                 print(f"Error processing arena_id {arena_id}: {e}")
 
@@ -66,11 +65,3 @@ if __name__ == "__main__":
     store_sun_data()
 
 
-conn = sqlite3.connect("nba_project.db")
-cur = conn.cursor()
-
-cur.execute("SELECT * FROM daylight_info LIMIT 10")
-for row in cur.fetchall():
-    print(row)
-
-conn.close()
