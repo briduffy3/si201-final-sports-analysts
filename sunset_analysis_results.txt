@@ -1,0 +1,91 @@
+================================================================================
+PLAYER PERFORMANCE ANALYSIS: BEFORE vs AFTER SUNSET
+================================================================================
+
+Spencer Dinwiddie (ID: 130)
+--------------------------------------------------------------------------------
+BEFORE SUNSET (2 games):
+  Points: 20.50 | Rebounds: 4.00 | Assists: 5.00
+AFTER SUNSET (8 games):
+  Points: 16.00 | Rebounds: 2.88 | Assists: 4.25
+DIFFERENCE:
+  Points: -4.50 | Rebounds: -1.12 | Assists: -0.75
+  >> Performs worse after sunset (4.50 pts difference)
+
+Trey Lyles (ID: 290)
+--------------------------------------------------------------------------------
+BEFORE SUNSET (3 games):
+  Points: 9.00 | Rebounds: 3.00 | Assists: 1.00
+AFTER SUNSET (7 games):
+  Points: 4.71 | Rebounds: 2.00 | Assists: 0.71
+DIFFERENCE:
+  Points: -4.29 | Rebounds: -1.00 | Assists: -0.29
+  >> Performs worse after sunset (4.29 pts difference)
+
+Jalen Brunson (ID: 73)
+--------------------------------------------------------------------------------
+BEFORE SUNSET (1 games):
+  Points: 16.00 | Rebounds: 4.00 | Assists: 7.00
+AFTER SUNSET (9 games):
+  Points: 20.22 | Rebounds: 4.11 | Assists: 7.33
+DIFFERENCE:
+  Points: +4.22 | Rebounds: +0.11 | Assists: +0.33
+  >> Performs better after sunset (4.22 pts difference)
+
+John Collins (ID: 101)
+--------------------------------------------------------------------------------
+BEFORE SUNSET (1 games):
+  Points: 10.00 | Rebounds: 10.00 | Assists: 1.00
+AFTER SUNSET (10 games):
+  Points: 14.10 | Rebounds: 8.20 | Assists: 1.10
+DIFFERENCE:
+  Points: +4.10 | Rebounds: -1.80 | Assists: +0.10
+  >> Performs better after sunset (4.10 pts difference)
+
+Cory Joseph (ID: 251)
+--------------------------------------------------------------------------------
+BEFORE SUNSET (1 games):
+  Points: 0.00 | Rebounds: 0.00 | Assists: 0.00
+AFTER SUNSET (9 games):
+  Points: 3.67 | Rebounds: 1.00 | Assists: 2.22
+DIFFERENCE:
+  Points: +3.67 | Rebounds: +1.00 | Assists: +2.22
+  >> Performs better after sunset (3.67 pts difference)
+
+PJ Tucker (ID: 450)
+--------------------------------------------------------------------------------
+BEFORE SUNSET (1 games):
+  Points: 3.00 | Rebounds: 4.00 | Assists: 1.00
+AFTER SUNSET (10 games):
+  Points: 5.50 | Rebounds: 4.40 | Assists: 0.70
+DIFFERENCE:
+  Points: +2.50 | Rebounds: +0.40 | Assists: -0.30
+  >> Performs better after sunset (2.50 pts difference)
+
+Tyler Dorsey (ID: 133)
+--------------------------------------------------------------------------------
+BEFORE SUNSET (2 games):
+  Points: 0.00 | Rebounds: 0.00 | Assists: 0.00
+AFTER SUNSET (8 games):
+  Points: 1.12 | Rebounds: 0.25 | Assists: 0.00
+DIFFERENCE:
+  Points: +1.12 | Rebounds: +0.25 | Assists: +0.00
+
+Malik Monk (ID: 324)
+--------------------------------------------------------------------------------
+BEFORE SUNSET (3 games):
+  Points: 12.33 | Rebounds: 3.33 | Assists: 5.00
+AFTER SUNSET (7 games):
+  Points: 12.14 | Rebounds: 2.14 | Assists: 4.14
+DIFFERENCE:
+  Points: -0.19 | Rebounds: -1.19 | Assists: -0.86
+
+Bogdan Bogdanovic (ID: 53)
+--------------------------------------------------------------------------------
+BEFORE SUNSET (1 games):
+  Points: 0.00 | Rebounds: 0.00 | Assists: 0.00
+AFTER SUNSET (10 games):
+  Points: 0.00 | Rebounds: 0.00 | Assists: 0.00
+DIFFERENCE:
+  Points: +0.00 | Rebounds: +0.00 | Assists: +0.00
+
