@@ -9,7 +9,8 @@ def get_sunrise_sunset(lat, lon, date):
         "lat": lat,
         "lng": lon,
         "date": date,  # Format: YYYY-MM-DD
-        "formatted": 0
+        "formatted": 0,
+        "tzid": "America/Detroit"
     }
     response = requests.get(url, params=params)
     data = response.json()
