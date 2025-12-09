@@ -33,14 +33,14 @@ def store_players(cur, data):
             continue
 
         cur.execute("""
-            INSERT INTO players (player_id, first_name, last_name, position, team_name)
+            INSERT INTO players (player_id, first_name, last_name, position, team_id)
             VALUES (?, ?, ?, ?, ?)
         """, (
             p["id"],
             p["first_name"],
             p["last_name"],
             p["position"],
-            item["team"]["full_name"]
+            item["team"]["id"]
         ))
 
 def store_games(cur, data):
@@ -64,7 +64,7 @@ def store_stats_and_update_games():
             first_name TEXT,
             last_name TEXT,
             position TEXT,
-            team_name TEXT
+            team_id INTEGER
         )
     """)
 
