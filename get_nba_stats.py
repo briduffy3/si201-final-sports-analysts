@@ -158,8 +158,8 @@ def store_stats_and_update_games():
         """, (
             date_part,
             time_part,
-            game["data"]["home_team"]["full_name"],
-            game["data"]["visitor_team"]["full_name"],
+            game["data"]["home_team"]["id"],
+            game["data"]["visitor_team"]["id"],
             game["data"]["season"],
             game_id
         ))
