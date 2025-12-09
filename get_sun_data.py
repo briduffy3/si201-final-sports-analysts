@@ -2,66 +2,93 @@ import requests
 import sqlite3
 import time
 
-def get_sunrise_sunset(lat, lon):
-    """Get sunrise and sunset times from the sunrise-sunset API."""
+def get_sunrise_sunset(lat, lon, date):
+    """Get sunrise and sunset times from the sunrise-sunset API for a specific date."""
     url = "https://api.sunrise-sunset.org/json"
     params = { 
         "lat": lat,
         "lng": lon,
+        "date": date,  # Format: YYYY-MM-DD
         "formatted": 0
     }
     response = requests.get(url, params=params)
     data = response.json()
 
-    sunrise = data["results"]["sunrise"]
-    sunset = data["results"]["sunset"]
-    return sunrise, sunset
+    if data["status"] == "OK":
+        sunrise = data["results"]["sunrise"]
+        sunset = data["results"]["sunset"]
+        return sunrise, sunset
+    else:
+        raise Exception(f"API returned status: {data['status']}")
 
-def store_sun_data(db_name="nba_project.db", batch_size=25):
-    """Store sunrise and sunset info for all arenas in the database."""
+def store_sun_data(db_name="final_project_sportsdata.db", batch_size=25):
+    """Store sunrise and sunset info for all games in the database."""
     conn = sqlite3.connect(db_name)
     cur = conn.cursor()
 
-
+    # Create table for game-specific daylight info
     cur.execute("""
-        CREATE TABLE IF NOT EXISTS daylight_info (
-            arena_id INTEGER PRIMARY KEY,
+        CREATE TABLE IF NOT EXISTS game_daylight_info (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            game_id INTEGER UNIQUE,
+            game_date TEXT,
+            home_team_id INTEGER,
+            visitor_team_id INTEGER,
+            arena_id INTEGER,
+            home_latitude REAL,
+            home_longitude REAL,
             sunrise TEXT,
             sunset TEXT
         )
     """)
     conn.commit()
 
-    while True:
-        cur.execute(f"""
-            SELECT id, latitude, longitude
-            FROM arenas
-            WHERE id NOT IN (SELECT arena_id FROM daylight_info)
-            LIMIT {batch_size}
-        """)
+    processed = 0
+    
+    while processed < batch_size:
+        # Get games that don't have daylight info yet and have a date
+        # Join with arenas table to get location data
+        cur.execute("""
+            SELECT g.game_id, g.date, g.home_team_id, g.visitor_team_id, a.latitude, a.longitude
+            FROM games g
+            JOIN arenas a ON g.home_team_id = a.id
+            WHERE g.date IS NOT NULL
+            AND g.game_id NOT IN (SELECT game_id FROM game_daylight_info WHERE game_id IS NOT NULL)
+            LIMIT ?
+        """, (batch_size - processed,))
+        
         rows = cur.fetchall()
+        
         if not rows:
-            print("All arenas processed!")
+            print("All available games processed!")
             break
 
-        for arena_id, lat, lon in rows:
+        for game_id, game_date, home_team_id, visitor_team_id, arena_id, lat, lon in rows:
             try:
-                sunrise, sunset = get_sunrise_sunset(lat, lon)
+                # Check if location data exists
+                if lat is None or lon is None:
+                    print(f"Warning: No location data for team_id {home_team_id}, skipping game {game_id}")
+                    continue
+                
+                sunrise, sunset = get_sunrise_sunset(lat, lon, game_date)
+                
                 cur.execute("""
-                    INSERT INTO daylight_info (arena_id, sunrise, sunset)
-                    VALUES (?, ?, ?)
-                """, (arena_id, sunrise, sunset))
-                print(f"Stored data for arena_id {arena_id}")
-                time.sleep(0.5)  
+                    INSERT INTO game_daylight_info 
+                    (game_id, game_date, home_team_id, visitor_team_id, arena_id, home_latitude, home_longitude, sunrise, sunset)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (game_id, game_date, home_team_id, visitor_team_id, arena_id, lat, lon, sunrise, sunset))
+                
+                print(f"Stored daylight data for game_id {game_id} on {game_date} at arena {arena_id}")
+                processed += 1
+                time.sleep(0.5)  # Rate limiting
+                
             except Exception as e:
-                print(f"Error processing arena_id {arena_id}: {e}")
+                print(f"Error processing game_id {game_id}: {e}")
 
         conn.commit()
 
     conn.close()
-    print("Finished storing sunrise/sunset data for all arenas.")
+    print(f"Finished storing sunrise/sunset data. Processed {processed} games.")
 
 if __name__ == "__main__":
     store_sun_data()
-
-
