@@ -385,6 +385,51 @@ def get_arena_coordinates(url: str, db_name: str = "nba_project.db"):
         )
 
     conn.commit()
+
+
+
+    c = conn.cursor()
+
+    # Check if table exists
+    c.execute("PRAGMA table_info('arenas')")
+    cols = c.fetchall()
+    if not cols:  
+        return  # table not created yet
+
+    # 1. Load ordered records
+    c.execute("""
+        SELECT arena_name, team, city, latitude, longitude
+        FROM arenas
+        ORDER BY team ASC;
+    """)
+    ordered_rows = c.fetchall()
+
+    # 2. Rename old table
+    c.execute("ALTER TABLE arenas RENAME TO arenas_old;")
+
+    # 3. Recreate table (same schema, fresh autoincrement IDs)
+    c.execute("""
+        CREATE TABLE arenas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            arena_name TEXT UNIQUE,
+            team TEXT,
+            city TEXT,
+            latitude REAL,
+            longitude REAL
+        );
+    """)
+
+    # 4. Insert rows in correct order → new IDs assigned in alphabetical order
+    for row in ordered_rows:
+        c.execute("""
+            INSERT INTO arenas (arena_name, team, city, latitude, longitude)
+            VALUES (?, ?, ?, ?, ?);
+        """, row)
+
+    # 5. Drop old table
+    c.execute("DROP TABLE arenas_old;")
+    conn.commit()
+
     # Export to CSV for easy sharing
     try:
         import csv
