@@ -46,10 +46,9 @@ def store_sun_data(db_name="final_project_sportsdata.db", batch_size=25):
     processed = 0
     
     while processed < batch_size:
-        # Get games that don't have daylight info yet and have a date
-        # Join with arenas table to get location data
+        # Join games with arenas using home_team_id = arenas.id
         cur.execute("""
-            SELECT g.game_id, g.date, g.home_team_id, g.visitor_team_id, a.latitude, a.longitude
+            SELECT g.game_id, g.date, g.home_team_id, g.visitor_team_id, a.id, a.latitude, a.longitude
             FROM games g
             JOIN arenas a ON g.home_team_id = a.id
             WHERE g.date IS NOT NULL
@@ -67,7 +66,7 @@ def store_sun_data(db_name="final_project_sportsdata.db", batch_size=25):
             try:
                 # Check if location data exists
                 if lat is None or lon is None:
-                    print(f"Warning: No location data for team_id {home_team_id}, skipping game {game_id}")
+                    print(f"Warning: No location data for arena_id {arena_id}, skipping game {game_id}")
                     continue
                 
                 sunrise, sunset = get_sunrise_sunset(lat, lon, game_date)
