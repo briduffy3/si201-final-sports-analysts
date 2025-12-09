@@ -14,7 +14,7 @@ def fetch_stats(cursor=None):
         "per_page": 25
     }
     if cursor:
-        params["page[cursor]"] = cursor 
+        params["cursor"] = cursor 
 
     headers = {"Authorization": API_KEY} 
 
@@ -127,6 +127,8 @@ def store_stats_and_update_games():
         cursor = data["meta"].get("next_cursor")
         if not cursor:
             break
+
+    conn.commit()
 
     print(f"Inserted {inserted_stats} new stats rows")
 
