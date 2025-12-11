@@ -53,6 +53,22 @@ def store_games(cur, data):
 
         cur.execute("INSERT INTO games (game_id) VALUES (?)", (game_id,))
 
+def get_or_create_date_id(cur, date):
+    """Get the date_id for a given date, or create a new entry if it doesn't exist."""
+    if date is None:
+        return None
+    
+    # Check if date already exists
+    cur.execute("SELECT date_id FROM game_dates WHERE date = ?", (date,))
+    result = cur.fetchone()
+    
+    if result:
+        return result[0]
+    
+    # Insert new date and return its ID
+    cur.execute("INSERT INTO game_dates (date) VALUES (?)", (date,))
+    return cur.lastrowid
+
 def store_stats_and_update_games():
     conn = sqlite3.connect("final_project_sportsdata.db")
     cur = conn.cursor()
@@ -68,14 +84,24 @@ def store_stats_and_update_games():
         )
     """)
 
+    # Create the game_dates table
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS game_dates (
+            date_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date TEXT UNIQUE NOT NULL
+        )
+    """)
+
+    # Updated games table WITHOUT the date column
     cur.execute("""
         CREATE TABLE IF NOT EXISTS games (
             game_id INTEGER PRIMARY KEY,
-            date TEXT,
             time TEXT,
             home_team_id INTEGER,
             visitor_team_id INTEGER,
-            season INTEGER
+            season INTEGER,
+            date_id INTEGER,
+            FOREIGN KEY (date_id) REFERENCES game_dates(date_id)
         )
     """)
 
@@ -134,7 +160,7 @@ def store_stats_and_update_games():
 
     # ------------------- UPDATE GAME DETAILS -------------------
     inserted_games = 0
-    cur.execute("SELECT game_id FROM games WHERE date IS NULL OR time IS NULL")
+    cur.execute("SELECT game_id FROM games WHERE date_id IS NULL")
     game_ids = [row[0] for row in cur.fetchall()]
 
     for game_id in game_ids:
@@ -153,16 +179,19 @@ def store_stats_and_update_games():
         if time_part.startswith("00:00"):
             time_part = None
 
+        # Get or create the date_id for this date
+        date_id = get_or_create_date_id(cur, date_part)
+
         cur.execute("""
             UPDATE games
-            SET date = ?, time = ?, home_team_id = ?, visitor_team_id = ?, season = ?
+            SET time = ?, home_team_id = ?, visitor_team_id = ?, season = ?, date_id = ?
             WHERE game_id = ?
         """, (
-            date_part,
             time_part,
             game["data"]["home_team"]["id"],
             game["data"]["visitor_team"]["id"],
             game["data"]["season"],
+            date_id,
             game_id
         ))
 
